@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
     final bloc = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home Page'),
+        title: Text('Home'),
       ),
       body: _crearListado(),
       floatingActionButton: _crearBoton(context),
@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
         color: Colors.red,
       ),
       onDismissed: (direccion) {
-        // TODO: Borrar producto
+        // Borrar producto
         productosProvider.borrarProductos(producto.id);
       },
       child: ListTile(
