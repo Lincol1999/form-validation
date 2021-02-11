@@ -33,6 +33,8 @@ dependencies:
   rxdart: ^0.25.0
   #utilizaremos el http
   http:
+  #Animaciones 
+  animate_do: 
 
 dev_dependencies:
   flutter_test:

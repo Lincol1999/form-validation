@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/producto_model.dart';
@@ -5,7 +6,7 @@ import 'package:formvalidation/src/providers/productos_provider.dart';
 
 class HomePage extends StatelessWidget {
   final productosProvider = new ProductosProvider();
-
+  final i = 0;
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
@@ -47,11 +48,16 @@ class HomePage extends StatelessWidget {
         // Borrar producto
         productosProvider.borrarProductos(producto.id);
       },
-      child: ListTile(
-        title: Text('${producto.titulo} - ${producto.valor}'),
-        subtitle: Text(producto.id),
-        onTap: () =>
-            Navigator.pushNamed(context, 'producto', arguments: producto),
+
+      //FadeIn, FadeInLeft son animaciones de como se mostraran la informacion
+      child: FadeIn(
+        delay: Duration(milliseconds: 100 * (i + 1)),
+        child: ListTile(
+          title: Text('${producto.titulo} - ${producto.valor}'),
+          subtitle: Text(producto.id),
+          onTap: () =>
+              Navigator.pushNamed(context, 'producto', arguments: producto),
+        ),
       ),
     );
   }
