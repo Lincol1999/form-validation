@@ -11,8 +11,11 @@ class ProductoPage extends StatefulWidget {
 
 class _ProductoPageState extends State<ProductoPage> {
   final formKey = GlobalKey<FormState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   final productoProvider = new ProductosProvider();
   ProductoModel producto = new ProductoModel();
+
+  bool _guardando = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +27,7 @@ class _ProductoPageState extends State<ProductoPage> {
     }
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text('Producto'),
         actions: [
@@ -103,7 +107,7 @@ class _ProductoPageState extends State<ProductoPage> {
       textColor: Colors.white,
       label: Text('Guardar'),
       icon: Icon(Icons.save),
-      onPressed: _submit,
+      onPressed: (_guardando) ? null : _submit,
     );
   }
 
@@ -119,20 +123,43 @@ class _ProductoPageState extends State<ProductoPage> {
 
   void _submit() {
     //devuelve true si es valido y false cuando no lo es.
-
     if (!formKey.currentState.validate()) return;
 
     //dispara el save de todos los TextFormField. osea mostrara en consola
     //lo ingresado por consola del titulo y valor.
     formKey.currentState.save();
-    print(producto.titulo);
-    print(producto.valor);
-    print(producto.disponible);
+
+    setState(() {
+      //aqui sabemos que guardamos la informacion
+      _guardando = true;
+    });
     if (producto.id == null) {
       productoProvider.crearProducto(producto);
     } else {
       productoProvider.editarProducto(producto);
       Navigator.pushNamed(context, 'home');
     }
+    setState(() {
+      //aqui sabemos que guardamos la informacion
+      _guardando = false;
+    });
+    //LLamamos al mostrarSnackbar para mostrar el mensaje en la parte
+    //inferior del dispositivo
+    mostrarSnackbar('Registro Guardado');
+
+    //De otra manera
+    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    //   content: Text('Registro Guardado'),
+    //   duration: Duration(milliseconds: 1500),
+    // ));
+  }
+
+  mostrarSnackbar(String mensaje) {
+    final snackbar = ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text(mensaje),
+      duration: Duration(milliseconds: 1500),
+    ));
+
+    return snackbar;
   }
 }
