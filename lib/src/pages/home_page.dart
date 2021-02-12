@@ -48,7 +48,6 @@ class HomePage extends StatelessWidget {
         // Borrar producto
         productosProvider.borrarProductos(producto.id);
       },
-
       //FadeIn, FadeInLeft son animaciones de como se mostraran la informacion
       child: FadeIn(
         delay: Duration(milliseconds: 100 * (i + 1)),

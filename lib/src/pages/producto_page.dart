@@ -132,6 +132,7 @@ class _ProductoPageState extends State<ProductoPage> {
       productoProvider.crearProducto(producto);
     } else {
       productoProvider.editarProducto(producto);
+      Navigator.pushNamed(context, 'home');
     }
   }
 }
