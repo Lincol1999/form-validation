@@ -1,21 +1,25 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:formvalidation/src/models/producto_model.dart';
 import 'package:formvalidation/src/providers/productos_provider.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
+import 'package:image_picker/image_picker.dart';
 
 class ProductoPage extends StatefulWidget {
-  //Este formKey es para validar un formulario.
   @override
   _ProductoPageState createState() => _ProductoPageState();
 }
 
 class _ProductoPageState extends State<ProductoPage> {
+  //Este formKey es para validar un formulario.
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final productoProvider = new ProductosProvider();
   ProductoModel producto = new ProductoModel();
 
   bool _guardando = false;
+  File foto;
 
   @override
   Widget build(BuildContext context) {
@@ -33,11 +37,11 @@ class _ProductoPageState extends State<ProductoPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.photo_size_select_actual),
-            onPressed: () {},
+            onPressed: _seleccionarFoto,
           ),
           IconButton(
             icon: Icon(Icons.camera_alt),
-            onPressed: () {},
+            onPressed: _tomarFoto,
           ),
         ],
       ),
@@ -48,6 +52,7 @@ class _ProductoPageState extends State<ProductoPage> {
             key: formKey,
             child: Column(
               children: [
+                _mostrarFoto(),
                 _crearNombre(),
                 _crearPrecio(),
                 _crearDisponible(),
@@ -161,5 +166,57 @@ class _ProductoPageState extends State<ProductoPage> {
     ));
 
     return snackbar;
+  }
+
+  Widget _mostrarFoto() {
+    if (producto.fotoUrl != null) {
+      //TODO: tengo que hacer esto
+      return Container();
+    } else {
+      return Image(
+        //foto ?.path ?? 'assets/no-image.png' => si la foto tiene info y este tiene el
+        //path se mostrara, pero si es null muestra el assets
+        image:
+            foto != null ? FileImage(foto) : AssetImage('assets/no-image.png'),
+
+        height: 300,
+        fit: BoxFit.cover,
+      );
+    }
+  }
+
+  Future _seleccionarFoto() async {
+    //Hasta que el usuario responda o almacene una img, lo almacenare en foto
+    final pickedFile =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    // pickedFile es de tipo string y lo convertimos a tipo File
+    foto = File(pickedFile.path);
+
+    setState(() {
+      if (foto != null) {
+        //Limpieza
+      } else {
+        mostrarSnackbar('Imagen no seleccionada');
+      }
+    });
+  }
+
+  Future _tomarFoto() async {
+    //Hasta que el usuario responda o almacene una img, lo almacenare en foto
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
+    // pickedFile es de tipo string y lo convertimos a tipo File
+    foto = File(pickedFile.path);
+
+    // if (foto != null) {
+    //   //Limpieza
+    // }
+    // setState(() {});
+    setState(() {
+      if (foto != null) {
+        //Limpieza
+      } else {
+        mostrarSnackbar('Imagen no seleccionada');
+      }
+    });
   }
 }
