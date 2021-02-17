@@ -51,11 +51,28 @@ class HomePage extends StatelessWidget {
       //FadeIn, FadeInLeft son animaciones de como se mostraran la informacion
       child: FadeIn(
         delay: Duration(milliseconds: 100 * (i + 1)),
-        child: ListTile(
-          title: Text('${producto.titulo} - ${producto.valor}'),
-          subtitle: Text(producto.id),
-          onTap: () =>
-              Navigator.pushNamed(context, 'producto', arguments: producto),
+        child: Card(
+          child: Column(
+            children: [
+              (producto.fotoUrl == null)
+                  ? Image(
+                      image: AssetImage('assets/no-image.png'),
+                    )
+                  : FadeInImage(
+                      image: NetworkImage(producto.fotoUrl),
+                      placeholder: AssetImage('assets/jar-loading.gif'),
+                      height: 300.0,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+              ListTile(
+                title: Text('${producto.titulo} - ${producto.valor}'),
+                subtitle: Text(producto.id),
+                onTap: () => Navigator.pushNamed(context, 'producto',
+                    arguments: producto),
+              ),
+            ],
+          ),
         ),
       ),
     );

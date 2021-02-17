@@ -175,8 +175,14 @@ class _ProductoPageState extends State<ProductoPage> {
 
   Widget _mostrarFoto() {
     if (producto.fotoUrl != null) {
+      //Si tiene una foto
       //TODO: tengo que hacer esto
-      return Container();
+      return FadeInImage(
+        image: NetworkImage(producto.fotoUrl),
+        placeholder: AssetImage('assets/jar-loading.gif'),
+        height: 300,
+        fit: BoxFit.contain,
+      );
     } else {
       return Image(
         //foto ?.path ?? 'assets/no-image.png' => si la foto tiene info y este tiene el
@@ -190,25 +196,17 @@ class _ProductoPageState extends State<ProductoPage> {
     }
   }
 
-  Future _seleccionarFoto() async {
-    //Hasta que el usuario responda o almacene una img, lo almacenare en foto
-    final pickedFile =
-        await ImagePicker().getImage(source: ImageSource.gallery);
-    // pickedFile es de tipo string y lo convertimos a tipo File
-    foto = File(pickedFile.path);
-
-    setState(() {
-      if (foto != null) {
-        //Limpieza
-      } else {
-        mostrarSnackbar('Imagen no seleccionada');
-      }
-    });
+  _seleccionarFoto() async {
+    _procesarImagen(ImageSource.gallery);
   }
 
-  Future _tomarFoto() async {
+  _tomarFoto() async {
+    _procesarImagen(ImageSource.camera);
+  }
+
+  _procesarImagen(ImageSource origin) async {
     //Hasta que el usuario responda o almacene una img, lo almacenare en foto
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
+    final pickedFile = await ImagePicker().getImage(source: origin);
     // pickedFile es de tipo string y lo convertimos a tipo File
     foto = File(pickedFile.path);
 
@@ -218,7 +216,8 @@ class _ProductoPageState extends State<ProductoPage> {
     // setState(() {});
     setState(() {
       if (foto != null) {
-        //Limpieza
+        //Actualizar la foto al editar.
+        producto.fotoUrl = null;
       } else {
         mostrarSnackbar('Imagen no seleccionada');
       }
