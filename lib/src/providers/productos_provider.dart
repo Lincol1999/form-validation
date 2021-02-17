@@ -70,7 +70,7 @@ class ProductosProvider {
 
     final file = await http.MultipartFile.fromPath('file', imagen.path,
         contentType: MediaType(
-            mimeType[0], mimeType[2]) //mimeType[0]= imagen mimeType[2]= jpg,gil
+            mimeType[0], mimeType[1]) //mimeType[0]= imagen mimeType[2]= jpg,gil
         );
 
     imageUploadReques.files.add(file);
