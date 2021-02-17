@@ -37,6 +37,8 @@ dependencies:
   animate_do: 
   #Para las fotografias
   image_picker:
+  #Para saber el formato de la img jpg,gif
+  mime_type: 
 
 
 dev_dependencies:
