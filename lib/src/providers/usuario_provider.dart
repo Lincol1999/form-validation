@@ -1,9 +1,11 @@
 import 'dart:convert';
 
+import 'package:formvalidation/src/preferences/preferencias_usuario.dart';
 import 'package:http/http.dart' as http;
 
 class UsuarioProvider {
   final String _firebaseToken = 'AIzaSyBFcqC-gt-QJvQn25EpyjvKYvf57J_x_Gg';
+  final _prefs = new PreferenciasUsuario();
 
   Future<Map<String, dynamic>> login(String email, String password) async {
     final authData = {
@@ -22,10 +24,13 @@ class UsuarioProvider {
 
     //si la resp contiene el idToken
     if (decodedResp.containsKey('idToken')) {
-      //TODO: Salvar el token en el storage
+      // Salvar el token en el storage
+
+      _prefs.token = decodedResp['idToken'];
+
       return {'ok': true, 'token': decodedResp['idToken']};
     } else {
-      return {'ok': true, 'mensaje': decodedResp['error']['menssage']};
+      return {'ok': false, 'mensaje': decodedResp['error']['message']};
     }
   }
 
@@ -43,14 +48,16 @@ class UsuarioProvider {
     );
 
     Map<String, dynamic> decodedResp = json.decode(resp.body);
-    print(decodedResp);
+    // print(decodedResp);
 
     //si la resp contiene el idToken
     if (decodedResp.containsKey('idToken')) {
-      //TODO: Salvar el token en el storage
+      // Salvar el token en el storage
+      _prefs.token = decodedResp['idToken'];
+
       return {'ok': true, 'token': decodedResp['idToken']};
     } else {
-      return {'ok': true, 'mensaje': decodedResp['error']['menssage']};
+      return {'ok': false, 'mensaje': decodedResp['error']['message']};
     }
   }
 }

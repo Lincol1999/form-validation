@@ -39,6 +39,11 @@ dependencies:
   image_picker:
   #Para saber el formato de la img jpg,gif
   mime_type: 
+  #Preferencias de usuario
+  shared_preferences: 
+  #Firebase auth
+  # firebase_auth: 
+
 
 
 dev_dependencies:
