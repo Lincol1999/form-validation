@@ -1,33 +1,33 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-// import 'package:formvalidation/src/bloc/provider.dart';
+import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/producto_model.dart';
-import 'package:formvalidation/src/providers/productos_provider.dart';
 
 class HomePage extends StatelessWidget {
-  final productosProvider = new ProductosProvider();
   final i = 0;
   @override
   Widget build(BuildContext context) {
-    // final bloc = Provider.of(context);
+    final productosBloc = Provider.productosBloc(context);
+    productosBloc.cargarProductos();
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: _crearListado(),
+      body: _crearListado(productosBloc),
       floatingActionButton: _crearBoton(context),
     );
   }
 
-  Widget _crearListado() {
-    return FutureBuilder(
-      future: productosProvider.cargarProductos(),
+  Widget _crearListado(ProductosBloc productosBloc) {
+    return StreamBuilder(
+      stream: productosBloc.productosStream,
       builder: (context, AsyncSnapshot<List<ProductoModel>> snapshot) {
         if (snapshot.hasData) {
           final productos = snapshot.data;
           return ListView.builder(
             itemCount: productos.length,
-            itemBuilder: (context, i) => _crearItem(context, productos[i]),
+            itemBuilder: (context, i) =>
+                _crearItem(context, productosBloc, productos[i]),
           );
         } else {
           return Center(
@@ -38,7 +38,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _crearItem(BuildContext context, ProductoModel producto) {
+  Widget _crearItem(BuildContext context, ProductosBloc productosBloc,
+      ProductoModel producto) {
     return Dismissible(
       key: UniqueKey(),
       background: Container(
@@ -46,7 +47,7 @@ class HomePage extends StatelessWidget {
       ),
       onDismissed: (direccion) {
         // Borrar producto
-        productosProvider.borrarProductos(producto.id);
+        productosBloc.borrarProducto(producto.id);
       },
       //FadeIn, FadeInLeft son animaciones de como se mostraran la informacion
       child: FadeIn(

@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:formvalidation/src/bloc/productos_bloc.dart';
+import 'package:formvalidation/src/bloc/provider.dart';
 import 'package:formvalidation/src/models/producto_model.dart';
-import 'package:formvalidation/src/providers/productos_provider.dart';
 import 'package:formvalidation/src/utils/utils.dart' as utils;
 import 'package:image_picker/image_picker.dart';
 
@@ -15,7 +16,7 @@ class _ProductoPageState extends State<ProductoPage> {
   //Este formKey es para validar un formulario.
   final formKey = GlobalKey<FormState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  final productoProvider = new ProductosProvider();
+  ProductosBloc productosBloc;
   ProductoModel producto = new ProductoModel();
 
   bool _guardando = false;
@@ -23,6 +24,7 @@ class _ProductoPageState extends State<ProductoPage> {
 
   @override
   Widget build(BuildContext context) {
+    productosBloc = Provider.productosBloc(context);
     //Comprobamos si ese producto es nuevo o viene con argumentos
     final ProductoModel prodData = ModalRoute.of(context).settings.arguments;
 
@@ -137,16 +139,17 @@ class _ProductoPageState extends State<ProductoPage> {
     setState(() {
       //aqui sabemos que guardamos la informacion
       _guardando = true;
+      Navigator.pushNamed(context, 'home');
     });
 
     if (foto != null) {
-      producto.fotoUrl = await productoProvider.subirImagen(foto);
+      producto.fotoUrl = await productosBloc.subirFoto(foto);
     }
 
     if (producto.id == null) {
-      productoProvider.crearProducto(producto);
+      productosBloc.agregarProducto(producto);
     } else {
-      productoProvider.editarProducto(producto);
+      productosBloc.editarProducto(producto);
       Navigator.pushNamed(context, 'home');
     }
     setState(() {
